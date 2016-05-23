@@ -1,0 +1,10 @@
+{
+	"Hero": {
+        "COLOR": "RED",
+        "IMAGE": ["image1", "image2"]
+	},	
+	"Alice": {
+        "COLOR": "BLUE"
+	}
+
+}

@@ -1,0 +1,27 @@
+{
+	"dial_playermeeting": {
+		"step1": {
+			"ID": 0,
+			"TEXT": "Hello Alice, this is our meeting dialogue.",
+			"DURATION": 4
+		},
+		"step2": {
+			"ID": 1,
+			"TEXT": "Hello Hero, this is awesome to meet you !",
+			"DURATION": 4
+		}
+	},	
+	"dial_alicecallhurry": {
+		"step1": {
+			"ID": 1,
+			"TEXT": "Hey someone hear me? Well, I hope you do, please just meet me in the main room. Hurry !",
+			"DURATION": 7
+		},
+		"step2": {
+			"ID": 0,
+			"TEXT": "I got to find her at any cost !",
+			"DURATION": 3
+		}
+	}
+
+}
