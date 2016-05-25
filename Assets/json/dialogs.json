@@ -1,26 +1,60 @@
 {
-	"dial_playermeeting": {
+	"dial_default": {
 		"step1": {
 			"ID": 0,
-			"TEXT": "Hello Alice, this is our meeting dialogue.",
-			"DURATION": 4
+			"TEXT": "Hello there, this is a demo, my name is John and I will explain what you have to know about this demo with Emily.",
+			"DURATION": 8
 		},
 		"step2": {
 			"ID": 1,
-			"TEXT": "Hello Hero, this is awesome to meet you !",
-			"DURATION": 4
-		}
-	},	
-	"dial_alicecallhurry": {
-		"step1": {
+			"TEXT": "First of all, know that you can move with W, A, S, D. You are able to move to the next trigger by moving forward.",
+			"DURATION": 9
+		},
+		"step3": {
 			"ID": 1,
-			"TEXT": "Hey someone hear me? Well, I hope you do, please just meet me in the main room. Hurry !",
+			"TEXT": "Be aware that we let you see the triggers in this demo, thing that you can disable in the inspector.",
+			"DURATION": 6
+		},
+		"step4": {
+			"ID": 0,
+			"TEXT": "If you trigger a trigger while a dialog is already playing, the new dialog will be add to a waiting list and play itself right after.",
+			"DURATION": 9
+		}
+
+	},	
+	"dial_demo": {
+		"step1": {
+			"ID": 0,
+			"TEXT": "This is a simple dialog manager which enables you to implement dialogs easily on your games.",
 			"DURATION": 7
 		},
 		"step2": {
+			"ID": 1,
+			"TEXT": "You just have to fill the dialogs.json and make and record vocal dialogs if you want to. Vocal dialogs can be disabled from the inspector.",
+			"DURATION": 10
+		},
+		"step3": {
+			"ID": 1,
+			"TEXT": "Go to the folder Assets/Prefabs/Characters to change your characters pictures, names and text color. You can create as much character as you want, you will have to link them in the DialogManager's Characters list.",
+			"DURATION": 15
+		},
+		"step4": {
+			"ID": 1,
+			"TEXT": "The ID that you will use in the dialog.json is the index referencing to the DialogManager's Characters list.",
+			"DURATION": 8
+		},
+		"step5": {
 			"ID": 0,
-			"TEXT": "I got to find her at any cost !",
-			"DURATION": 3
+			"TEXT": "Be aware that you have a Debug boolean that you can enable or disable if you want to see the potential errors or not.",
+			"DURATION": 8
+		}
+
+	},	
+	"dial_info": {
+		"step1": {
+			"ID": 0,
+			"TEXT": "Remember that it is royalty-free and that you are welcome to fork me on GitHub @juliencardoux to improve it.",
+			"DURATION": 10
 		}
 	}
 

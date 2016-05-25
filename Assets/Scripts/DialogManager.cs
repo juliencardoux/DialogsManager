@@ -18,6 +18,7 @@ using UnityEngine.UI;
 ///                   If not the case, add the LitJson dll to the project and and add it as a reference in the project.
 ///                   Check "debug" to see Error messages from ThrowError.
 ///                   Check "playVocals" to use the vocals with the text dialogs.
+///                   If using WebGL or WebPlayer, make sure that dialogs.json is at the root of your WebGL/WebPlayer build
 ///-----------------------------------------------------------------
 
 public class DialogManager : MonoBehaviour {
@@ -29,7 +30,8 @@ public class DialogManager : MonoBehaviour {
 
 	public bool debug;
 	public bool playVocals;
-	
+	public bool fullUITextColored;
+
 	private String _jsonString;
 	private JsonData _jsonData;
 	private int _dialStep;
@@ -39,13 +41,14 @@ public class DialogManager : MonoBehaviour {
 	public GameObject dialTxtCanvas;
 	public GameObject dialNameCanvas;
 	public GameObject imgCanvas;
-	public string tagName;
 
 	private Text _dialTxt;
 	private Text _dialName;
 	private Image _dialImg;
 
+	[SerializeField]
 	private bool _isDialoguing;
+	[SerializeField]
 	private string _currentId;
 
 	public List<DialogStyle> characters;
@@ -68,12 +71,24 @@ public class DialogManager : MonoBehaviour {
 		_dialName = dialNameCanvas.GetComponent<Text>();
 		_dialImg = imgCanvas.GetComponent<Image>();
 		_dialStep = 1;
-		LoadJson ();
+
+		#if UNITY_WEBGL || UNITY_WEBPLAYER
+			StartCoroutine(LoadJsonFromWeb("dialogs.json"));
+			return;
+		#else
+			LoadJson ();
+		#endif
 
 	}
 
-	private void LoadJson(){
-		_jsonString = File.ReadAllText (Application.dataPath + "/json/dialogs.json");
+	IEnumerator LoadJsonFromWeb(string fileURL)
+	{
+		WWW jsonFromWeb = new WWW(fileURL);
+		yield return jsonFromWeb;
+
+		if (!string.IsNullOrEmpty(jsonFromWeb.error)) ThrowError(6);
+		else _jsonString = jsonFromWeb.text;
+
 		try {
 			_jsonData = JsonMapper.ToObject (_jsonString);
 		}
@@ -82,6 +97,18 @@ public class DialogManager : MonoBehaviour {
 		}
 	}
 
+	private void LoadJson(){
+		#if UNITY_STANDALONE
+			_jsonString = File.ReadAllText (Application.dataPath + "/json/dialogs.json");
+		#endif
+
+		try {
+			_jsonData = JsonMapper.ToObject (_jsonString);
+		}
+		catch {
+			ThrowError(0);
+		}
+	}
 
 	IEnumerator StartDialog(string id) {
 		InitDialog (id);
@@ -110,6 +137,7 @@ public class DialogManager : MonoBehaviour {
 	private void DoDialog(int charaID, string text, string dialID) {
 		try {
 			_dialName.text = characters[charaID].name;
+			if(fullUITextColored) _dialTxt.color = characters[charaID].color;
 			_dialName.color = characters[charaID].color;
 			_dialImg.sprite = characters[charaID].img[0];
 		}
@@ -162,22 +190,23 @@ public class DialogManager : MonoBehaviour {
 	}
 
 	private void ThrowDialog(string id) {
-		if (_isDialoguing) {
-			if(_currentId != id) {
-				if(!_jsonData.Keys.Contains("dial_" + id)) {
-					ThrowError(1);
-					return;
+		if(!_jsonData.Keys.Contains("dial_" + id)) {
+			ThrowError(1);
+			return;
+		} else {
+			if (_isDialoguing) {
+				if(_currentId != id) {
+					waitList.Add(id);
+					_currentId = id;
 				}
-				waitList.Add(id);
+				return;
+			}
+			else {
+				StartCoroutine(StartDialog(id));
+				_isDialoguing = true;
 				_currentId = id;
 			}
-			return;
 		}
-		else {
-			StartCoroutine(StartDialog(id));
-			_isDialoguing = true;
-			_currentId = id;
-		} 
 	}
 
 	private void ThrowError(int error) {
@@ -187,7 +216,7 @@ public class DialogManager : MonoBehaviour {
 			Debug.LogError("Error " + error + " : Your Json isn't a validate Json, verify your Json file.");
 			break;
 		case 1:
-			Debug.LogWarning("Error " + error + " : No such ID in the loaded Json, please verify the DialTrigger ID and your Json keys.");
+			Debug.LogWarning("Error " + error + " : There is no corresponding ID in the loaded Json, please verify the DialTrigger ID and your Json keys.");
 			break;
 		case 2:
 			Debug.LogWarning("Error " + error + " : There is no field ID, TEXT or DURATION in your Json step.");
@@ -200,6 +229,9 @@ public class DialogManager : MonoBehaviour {
 			break;
 		case 5:
 			Debug.LogWarning("Error " + error + " : No correspondance in names_data.json with the ID specified in dialogs.json.");
+			break;
+		case 6:
+			Debug.LogWarning("Error " + error + " : Can't load Json from Web, please verify the path and make sure that dialogs.json is at the root of your WebPlayer/WebGL build.");
 			break;
 		}
 	}

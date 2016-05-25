@@ -20,7 +20,7 @@ public class DialogTrigger : MonoBehaviour {
 	public delegate void OnDialogEvent(string id);
 	public static event OnDialogEvent OnDial;
 
-	void OnCollisionEnter(Collision col) {
+	void OnTriggerEnter(Collider col) {
 		if(col.gameObject.tag != "Player") return;
 		if(singleUse && used) return;
 		used = true;
