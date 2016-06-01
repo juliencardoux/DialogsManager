@@ -12,7 +12,7 @@ using UnityEngine.UI;
 ///   Author:         Julien Cardoux                    
 ///   Date:           2016/05/22
 ///   Licence:        OpenSource
-///   Notes:          Put your Json content in the  Assets/json/dialogs.json file.
+///   Notes:          Put your Json content in the  Assets/Resources/json/dialogs.json file.
 ///                   Put your vocals in the Assets/Resources/Speech folder.
 ///                   Put your thumbnails in the Assets/Resources/Images folder.
 ///                   If not the case, add the LitJson dll to the project and and add it as a reference in the project.
@@ -99,7 +99,7 @@ public class DialogManager : MonoBehaviour {
 
 	private void LoadJson(){
 		#if UNITY_STANDALONE
-			_jsonString = File.ReadAllText (Application.dataPath + "/json/dialogs.json");
+			 _jsonString = Resources.Load("json/dialogs").ToString();
 		#endif
 
 		try {
