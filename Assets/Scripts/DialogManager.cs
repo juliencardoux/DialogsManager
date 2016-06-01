@@ -31,6 +31,7 @@ public class DialogManager : MonoBehaviour {
 	public bool debug;
 	public bool playVocals;
 	public bool fullUITextColored;
+	public bool showBackground;
 
 	private String _jsonString;
 	private JsonData _jsonData;
@@ -41,6 +42,7 @@ public class DialogManager : MonoBehaviour {
 	public GameObject dialTxtCanvas;
 	public GameObject dialNameCanvas;
 	public GameObject imgCanvas;
+	public GameObject textBackground;
 
 	private Text _dialTxt;
 	private Text _dialName;
@@ -140,6 +142,7 @@ public class DialogManager : MonoBehaviour {
 			if(fullUITextColored) _dialTxt.color = characters[charaID].color;
 			_dialName.color = characters[charaID].color;
 			_dialImg.sprite = characters[charaID].img[0];
+			if(showBackground) textBackground.SetActive(true);
 		}
 		catch {
 			ThrowError(5);
@@ -177,6 +180,7 @@ public class DialogManager : MonoBehaviour {
 		_isDialoguing = false;
 		_dialStep = 1;
 		_currentId = "";
+		if(showBackground) textBackground.SetActive(false);
 		StartCoroutine(CheckWaitList());
 	}
 
