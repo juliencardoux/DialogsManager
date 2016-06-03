@@ -48,6 +48,8 @@ public class DialogManager : MonoBehaviour {
 	private Image _dialImg;
 	private Sprite _neutralImg;
 
+	private JsonData currentPath;
+
 	[SerializeField]
 	private bool _isDialoguing;
 	[SerializeField]
@@ -117,8 +119,8 @@ public class DialogManager : MonoBehaviour {
 			ThrowError(1);
 			return;
 		}
-		var currentPath = _jsonData ["dial_" + dial] ["step" + _dialStep];
-		if(!currentPath.Keys.Contains("ID") || !currentPath.Keys.Contains("TEXT") ||!currentPath.Keys.Contains("DURATION")) {
+		currentPath = _jsonData ["dial_" + dial] ["step" + _dialStep];
+		if(!CheckKeys("ID") || !CheckKeys("TEXT") || !CheckKeys("DURATION")) {
 			ThrowError(2);
 			return;
 		}
@@ -205,6 +207,10 @@ public class DialogManager : MonoBehaviour {
 				_currentId = id;
 			}
 		}
+	}
+
+	private bool CheckKeys(string id) {
+		return currentPath.Keys.Contains(id);
 	}
 
 	private void ThrowError(int error) {
