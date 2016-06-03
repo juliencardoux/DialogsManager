@@ -18,7 +18,6 @@ using UnityEngine.UI;
 ///                   If not the case, add the LitJson dll to the project and and add it as a reference in the project.
 ///                   Check "debug" to see Error messages from ThrowError.
 ///                   Check "playVocals" to use the vocals with the text dialogs.
-///                   If using WebGL or WebPlayer, make sure that dialogs.json is at the root of your WebGL/WebPlayer build
 ///-----------------------------------------------------------------
 
 public class DialogManager : MonoBehaviour {
@@ -47,6 +46,7 @@ public class DialogManager : MonoBehaviour {
 	private Text _dialTxt;
 	private Text _dialName;
 	private Image _dialImg;
+	private Sprite _neutralImg;
 
 	[SerializeField]
 	private bool _isDialoguing;
@@ -72,14 +72,10 @@ public class DialogManager : MonoBehaviour {
 		_dialTxt = dialTxtCanvas.GetComponent<Text>();
 		_dialName = dialNameCanvas.GetComponent<Text>();
 		_dialImg = imgCanvas.GetComponent<Image>();
+		_neutralImg = _dialImg.sprite;
 		_dialStep = 1;
 
-		#if UNITY_WEBGL || UNITY_WEBPLAYER
-			StartCoroutine(LoadJsonFromWeb("dialogs.json"));
-			return;
-		#else
-			LoadJson ();
-		#endif
+		LoadJson ();
 
 	}
 
@@ -100,9 +96,7 @@ public class DialogManager : MonoBehaviour {
 	}
 
 	private void LoadJson(){
-		#if UNITY_STANDALONE
-			 _jsonString = Resources.Load("json/dialogs").ToString();
-		#endif
+		_jsonString = Resources.Load("json/dialogs").ToString();
 
 		try {
 			_jsonData = JsonMapper.ToObject (_jsonString);
@@ -176,7 +170,7 @@ public class DialogManager : MonoBehaviour {
 	private void ResetUI() {
 		_dialTxt.text = "";
 		_dialName.text = "";
-		_dialImg.sprite = (Sprite)Resources.Load<Sprite>("Images/neutral") as Sprite;
+		_dialImg.sprite = _neutralImg;
 		_isDialoguing = false;
 		_dialStep = 1;
 		_currentId = "";
